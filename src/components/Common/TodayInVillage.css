@@ -1,0 +1,91 @@
+/* src/components/Common/TodayInVillage.css */
+.today-section {
+  background: linear-gradient(180deg, var(--green-mist) 0%, var(--white-warm) 100%);
+}
+
+.today-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.today-grid.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.today-card {
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.today-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.today-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+}
+
+.today-icon {
+  font-size: 1.2rem;
+}
+
+.today-type-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.today-time {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.today-card-body {
+  padding: 20px;
+}
+
+.today-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  margin-bottom: 8px;
+  font-family: var(--font-marathi);
+}
+
+.today-desc {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+.no-updates {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.no-updates span { font-size: 3rem; }
+.no-updates p { color: var(--text-light); }
+
+@media (max-width: 900px) {
+  .today-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .today-grid { grid-template-columns: 1fr; }
+}

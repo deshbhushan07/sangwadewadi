@@ -1,0 +1,316 @@
+/* src/pages/GrampanchayatPage.css */
+.gp-sarpanch-section {
+  background: linear-gradient(180deg, var(--white-warm) 0%, var(--green-mist) 100%);
+}
+
+.sarpanch-card {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding: 48px;
+  max-width: 860px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(255,255,255,0.9));
+  border: 1px solid rgba(201,168,76,0.2);
+}
+
+.sarpanch-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sarpanch-avatar img,
+.sarpanch-avatar-placeholder {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(201,168,76,0.4);
+  box-shadow: 0 8px 32px rgba(201,168,76,0.2);
+}
+
+.sarpanch-avatar-placeholder {
+  background: linear-gradient(135deg, var(--green-mist), rgba(201,168,76,0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+.sarpanch-crown {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  filter: drop-shadow(0 2px 6px rgba(201,168,76,0.5));
+}
+
+.sarpanch-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sarpanch-role-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--green-deep);
+  padding: 5px 18px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.sarpanch-name {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--green-deep);
+  margin: 0;
+}
+
+.sarpanch-ward {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.sarpanch-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--green-mid);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.sarpanch-phone:hover { color: var(--green-deep); }
+
+.sarpanch-message {
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  line-height: 1.7;
+  font-style: italic;
+  padding: 16px 20px;
+  background: rgba(15,61,46,0.04);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* Members grid */
+.gp-members-section {
+  background: var(--white-warm);
+}
+
+.gp-members-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.7s ease;
+}
+
+.gp-members-grid.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.member-card {
+  padding: 28px 24px;
+  text-align: center;
+  transition: var(--transition);
+  animation: fadeUp 0.5s ease both;
+}
+
+.member-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.member-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid;
+  margin: 0 auto 16px;
+  overflow: hidden;
+}
+
+.member-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.member-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.member-role-badge {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.member-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  font-family: var(--font-marathi);
+}
+
+.member-phone {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.member-phone:hover { color: var(--green-mid); }
+
+/* Notices */
+.gp-notices-section {
+  background: var(--green-mist);
+}
+
+.notices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 860px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.7s ease;
+}
+
+.notices-list.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.notice-item {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  transition: var(--transition);
+  animation: fadeUp 0.5s ease both;
+}
+
+.notice-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+
+.notice-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.notice-content { flex: 1; }
+
+.notice-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.notice-title {
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-marathi);
+}
+
+.notice-date {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.notice-body {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+
+/* GP Info */
+.gp-info-section { background: var(--white-warm); }
+
+.gp-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.gp-info-card {
+  padding: 32px;
+}
+
+.gp-info-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(15,61,46,0.08);
+}
+
+.gp-info-details p {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(15,61,46,0.06);
+}
+
+.gp-services-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gp-services-list li {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sarpanch-card { flex-direction: column; text-align: center; gap: 28px; padding: 32px 24px; }
+  .sarpanch-info { align-items: center; }
+  .gp-members-grid { grid-template-columns: 1fr 1fr; }
+  .gp-info-grid { grid-template-columns: 1fr; }
+  .notice-header { flex-direction: column; gap: 4px; }
+}
+
+@media (max-width: 480px) {
+  .gp-members-grid { grid-template-columns: 1fr; }
+}

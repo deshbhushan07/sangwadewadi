@@ -1,0 +1,125 @@
+/* src/components/Common/AwardsSlider.css */
+.awards-section {
+  position: relative;
+  padding: 80px 0 80px;
+  overflow: hidden;
+}
+
+.awards-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--green-deep) 0%, #0a2820 50%, var(--green-mid) 100%);
+  z-index: 0;
+}
+
+.awards-section .container,
+.awards-section .section-header {
+  position: relative;
+  z-index: 1;
+}
+
+.awards-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+  background-size: 32px 32px;
+  z-index: 0;
+}
+
+.awards-track-wrap {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  padding: 8px 0;
+}
+
+.awards-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: slideLeft 28s linear infinite;
+}
+
+.awards-track:hover {
+  animation-play-state: paused;
+}
+
+.award-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-md);
+  padding: 20px 28px;
+  min-width: 300px;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.award-card:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+.award-icon {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+}
+
+.award-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.award-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--white-warm);
+  font-family: var(--font-marathi);
+}
+
+.award-by {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.65);
+}
+
+.award-year {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  background: rgba(201,168,76,0.15);
+  padding: 2px 10px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+/* Fade edges */
+.awards-fade-left,
+.awards-fade-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.awards-fade-left {
+  left: 0;
+  background: linear-gradient(90deg, var(--green-deep), transparent);
+}
+
+.awards-fade-right {
+  right: 0;
+  background: linear-gradient(-90deg, var(--green-deep), transparent);
+}
+
+@media (max-width: 480px) {
+  .award-card { min-width: 240px; padding: 16px 20px; }
+}
