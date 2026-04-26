@@ -59,11 +59,7 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          {user && (
-            <Link to="/admin" className={`nav-link admin-link ${location.pathname.startsWith('/admin') ? 'active' : ''}`}>
-              ⚙ {t('admin')}
-            </Link>
-          )}
+        
         </div>
 
         <div className="nav-right">

@@ -1,7 +1,7 @@
 // src/components/Blog/FeaturedBlogs.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { db } from '../../firebase';
+import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { collection, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { useInView } from 'react-intersection-observer';
 import { useLanguage } from '../../context/LanguageContext';

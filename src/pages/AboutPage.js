@@ -26,7 +26,7 @@ const facts = [
 
 const AboutPage = () => {
   const { t } = useLanguage();
-  const { ref: heroRef, inView: heroIn } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const { ref: heroRef } = useInView({ triggerOnce: true, threshold: 0.1 });
   const { ref: timeRef, inView: timeIn } = useInView({ triggerOnce: true, threshold: 0.05 });
 
   return (

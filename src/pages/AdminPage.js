@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
 import { db } from '../firebase';
 import {
   collection, addDoc, updateDoc, deleteDoc, doc,
@@ -57,9 +56,10 @@ const AdminLogin = () => {
 };
 
 // ─── Blogs Manager ───
+// ─── Blogs Manager ───
 const BlogsManager = () => {
   const [blogs, setBlogs] = useState([]);
-  const [form, setForm] = useState({ title: '', category: 'news', excerpt: '', content: '', date: '' });
+  const [form, setForm] = useState({ title: '', category: 'news', excerpt: '', content: '', date: '', imageUrl: '' });
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
@@ -69,78 +69,138 @@ const BlogsManager = () => {
   }, []);
 
   const save = async () => {
-    if (!form.title || !form.content) { toast.error('शीर्षक आणि मजकूर आवश्यक आहे.'); return; }
+    if (!form.title || !form.content) { toast.error('Title and content are required.'); return; }
     try {
       if (editing) {
         await updateDoc(doc(db, 'blogs', editing), { ...form, updatedAt: serverTimestamp() });
-        toast.success('ब्लॉग अद्यतनित!');
+        toast.success('Blog updated!');
       } else {
         await addDoc(collection(db, 'blogs'), { ...form, createdAt: serverTimestamp() });
-        toast.success('ब्लॉग जोडला!');
+        toast.success('Blog added!');
       }
-      setForm({ title: '', category: 'news', excerpt: '', content: '', date: '' });
+      setForm({ title: '', category: 'news', excerpt: '', content: '', date: '', imageUrl: '' });
       setEditing(null); setShowForm(false);
-    } catch { toast.error('त्रुटी झाली.'); }
+    } catch { toast.error('Something went wrong.'); }
   };
 
   const remove = async id => {
-    if (!window.confirm('हा ब्लॉग हटवायचा?')) return;
-    try { await deleteDoc(doc(db, 'blogs', id)); toast.success('हटवला!'); }
-    catch { toast.error('त्रुटी झाली.'); }
+    if (!window.confirm('Delete this blog?')) return;
+    try { await deleteDoc(doc(db, 'blogs', id)); toast.success('Deleted!'); }
+    catch { toast.error('Error deleting.'); }
   };
 
   const startEdit = blog => {
-    setForm({ title: blog.title, category: blog.category, excerpt: blog.excerpt || '', content: blog.content || '', date: blog.date || '' });
+    setForm({
+      title: blog.title || '',
+      category: blog.category || 'news',
+      excerpt: blog.excerpt || '',
+      content: blog.content || '',
+      date: blog.date || '',
+      imageUrl: blog.imageUrl || '',
+    });
     setEditing(blog.id); setShowForm(true);
   };
 
   return (
     <div className="admin-section">
       <div className="admin-section-header">
-        <h3>✍️ ब्लॉग व्यवस्थापन</h3>
-        <button className="btn-primary" onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ title: '', category: 'news', excerpt: '', content: '', date: '' }); }}>
-          {showForm ? '✕ बंद करा' : '+ नवीन ब्लॉग'}
+        <h3>✍️ Blog Management</h3>
+        <button className="btn-primary" onClick={() => {
+          setShowForm(!showForm); setEditing(null);
+          setForm({ title: '', category: 'news', excerpt: '', content: '', date: '', imageUrl: '' });
+        }}>
+          {showForm ? '✕ Close' : '+ New Blog'}
         </button>
       </div>
 
       {showForm && (
         <div className="admin-form glass-card">
-          <h4>{editing ? 'ब्लॉग संपादित करा' : 'नवीन ब्लॉग'}</h4>
+          <h4 style={{ marginBottom: 24, color: 'var(--green-deep)' }}>
+            {editing ? '✏️ Edit Blog' : '📝 New Blog'}
+          </h4>
+
+          {/* Row 1: Title + Category */}
           <div className="admin-form-grid">
             <div className="form-group">
-              <label className="form-label">शीर्षक *</label>
-              <input className="form-input" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="ब्लॉगचे शीर्षक" />
+              <label className="form-label">Title *</label>
+              <input
+                className="form-input"
+                value={form.title}
+                onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
+                placeholder="Blog title"
+              />
             </div>
             <div className="form-group">
-              <label className="form-label">श्रेणी</label>
-              <select className="form-input" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
-                <option value="news">बातम्या</option>
-                <option value="events">कार्यक्रम</option>
-                <option value="stories">कथा</option>
+              <label className="form-label">Category</label>
+              <select
+                className="form-input"
+                value={form.category}
+                onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+              >
+                <option value="news">News (बातम्या)</option>
+                <option value="events">Events (कार्यक्रम)</option>
+                <option value="stories">Stories (कथा)</option>
               </select>
             </div>
+          </div>
+
+          {/* Row 2: Date + Image URL */}
+          <div className="admin-form-grid">
             <div className="form-group">
-              <label className="form-label">तारीख</label>
-              <input className="form-input" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} placeholder="उदा. १५ एप्रिल २०२४" />
+              <label className="form-label">Date</label>
+              <input
+                className="form-input"
+                value={form.date}
+                onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
+                placeholder="e.g. 15 April 2024"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Cover Image URL (optional)</label>
+              <input
+                className="form-input"
+                value={form.imageUrl}
+                onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))}
+                placeholder="https://..."
+              />
             </div>
           </div>
+
+          {/* Excerpt */}
           <div className="form-group">
-            <label className="form-label">संक्षिप्त वर्णन</label>
-            <input className="form-input" value={form.excerpt} onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))} placeholder="थोडक्यात वर्णन..." />
+            <label className="form-label">Short Description / Excerpt</label>
+            <input
+              className="form-input"
+              value={form.excerpt}
+              onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))}
+              placeholder="Brief summary shown on blog list..."
+            />
           </div>
+
+          {/* Content */}
           <div className="form-group">
-            <label className="form-label">मजकूर (HTML) *</label>
-            <textarea className="form-input form-textarea" rows={8} value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} placeholder="<p>ब्लॉगचा संपूर्ण मजकूर येथे लिहा...</p>" />
+            <label className="form-label">Full Content (HTML) *</label>
+            <textarea
+              className="form-input form-textarea"
+              rows={10}
+              value={form.content}
+              onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
+              placeholder={"<p>Write your full blog content here...</p>\n<p>You can use HTML tags like <strong>bold</strong>, <em>italic</em>, <h2>headings</h2></p>"}
+            />
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-light)', marginTop: 4, display: 'block' }}>
+              💡 Tip: Use &lt;p&gt; for paragraphs, &lt;h2&gt; for headings, &lt;strong&gt; for bold, &lt;ul&gt;&lt;li&gt; for lists.
+            </span>
           </div>
+
           <div className="admin-form-actions">
-            <button className="btn-primary" onClick={save}>💾 जतन करा</button>
-            <button className="btn-secondary" onClick={() => { setShowForm(false); setEditing(null); }}>रद्द करा</button>
+            <button className="btn-primary" onClick={save}>💾 Save Blog</button>
+            <button className="btn-secondary" onClick={() => { setShowForm(false); setEditing(null); }}>Cancel</button>
           </div>
         </div>
       )}
 
       <div className="admin-list">
-        {blogs.length === 0 && <p className="admin-empty">अद्याप कोणताही ब्लॉग नाही.</p>}
+        {blogs.length === 0 && <p className="admin-empty">No blogs yet. Add your first blog above.</p>}
         {blogs.map(b => (
           <div key={b.id} className="admin-list-item glass-card">
             <div className="admin-list-info">
@@ -149,8 +209,8 @@ const BlogsManager = () => {
               <span className="admin-list-date">{b.date}</span>
             </div>
             <div className="admin-list-actions">
-              <button className="admin-btn-edit" onClick={() => startEdit(b)}>✏️ संपादित</button>
-              <button className="admin-btn-delete" onClick={() => remove(b.id)}>🗑️ हटवा</button>
+              <button className="admin-btn-edit" onClick={() => startEdit(b)}>✏️ Edit</button>
+              <button className="admin-btn-delete" onClick={() => remove(b.id)}>🗑️ Delete</button>
             </div>
           </div>
         ))}
@@ -559,7 +619,6 @@ const TABS = [
 
 const AdminPage = () => {
   const { user, logout } = useAuth();
-  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('blogs');
 
   if (!user) return <AdminLogin />;

@@ -17,7 +17,7 @@ const defaultGallery = [
   { id: '4', category: 'people', caption: 'ग्रामसभा', url: null, type: 'image' },
   { id: '5', category: 'festivals', caption: 'दीपावली', url: null, type: 'image' },
   { id: '6', category: 'nature', caption: 'शेत', url: null, type: 'image' },
-  { id: '7', category: 'events', category: 'events', caption: 'पुरस्कार सोहळा', url: null, type: 'image' },
+  { id: '7', category: 'events', caption: 'events', caption: 'पुरस्कार सोहळा', url: null, type: 'image' },
   { id: '8', category: 'people', caption: 'महिला बचत गट', url: null, type: 'image' },
   { id: '9', category: 'nature', caption: 'गावाचे सौंदर्य', url: null, type: 'image' },
 ];

@@ -113,16 +113,15 @@ export const BlogDetailPage = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-  const defaultBlog = defaultBlogs.find(b => b.id === id);
 
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         const snap = await getDoc(doc(db, 'blogs', id));
         if (snap.exists()) setBlog({ id: snap.id, ...snap.data() });
-        else setBlog(defaultBlog || null);
+        else setBlog(defaultBlogs.find(b => b.id === id) || null);
       } catch {
-        setBlog(defaultBlog || null);
+        setBlog(defaultBlogs.find(b => b.id === id) || null);
       } finally {
         setLoading(false);
       }

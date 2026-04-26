@@ -1,6 +1,6 @@
 // src/pages/HomePage.js
 import React from 'react';
-import { HelmetProvider, Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import Hero from '../components/Hero/Hero';
 import AboutPreview from '../components/Common/AboutPreview';
 import FeaturedGallery from '../components/Gallery/FeaturedGallery';
