@@ -435,17 +435,162 @@
 }
 
 /* Responsive */
+/* ─── Responsive / Mobile ─── */
 @media (max-width: 768px) {
+
+  /* ── Layout ── */
+  .admin-page {
+    flex-direction: column;
+  }
+
   .admin-sidebar {
     width: 100%;
     height: auto;
     position: relative;
+    flex-direction: column;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    min-height: auto;
+  }
+
+  /* ── Sidebar brand ── */
+  .admin-sidebar-brand {
+    padding: 16px;
+  }
+
+  /* ── Nav: horizontal scrollable pill row ── */
+  .admin-nav {
     flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px 12px;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .admin-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-nav-btn {
+    white-space: nowrap;
+    padding: 9px 14px;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+    width: auto;
+  }
+
+  /* ── Sidebar footer: horizontal ── */
+  .admin-sidebar-footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    gap: 12px;
+  }
+
+  .admin-user-info {
+    padding: 0;
+    font-size: 0.75rem;
+  }
+
+  .admin-logout-btn {
+    width: auto;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  /* ── Topbar ── */
+  .admin-topbar {
+    padding: 14px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .admin-topbar h1 {
+    font-size: 1rem;
+  }
+
+  /* ── Content area ── */
+  .admin-content {
+    padding: 16px;
+  }
+
+  /* ── Section header ── */
+  .admin-section-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .admin-section-header h3 {
+    font-size: 1rem;
+  }
+
+  /* ── Forms ── */
+  .admin-form {
+    padding: 18px 16px;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form-actions {
     flex-wrap: wrap;
   }
-  .admin-main { margin-left: 0; }
-  .admin-nav { flex-direction: row; flex-wrap: wrap; padding: 8px; }
-  .admin-nav-btn { width: auto; }
-  .gallery-admin-grid { grid-template-columns: repeat(2, 1fr); }
-  .admin-content { padding: 16px; }
+
+  .admin-form-actions .btn-primary,
+  .admin-form-actions .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ── List items ── */
+  .admin-list-item {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  .admin-list-info {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .admin-list-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* ── Gallery grid ── */
+  .gallery-admin-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ── Upload area ── */
+  .upload-area {
+    padding: 24px 16px;
+  }
+
+  /* ── Login card ── */
+  .admin-login-card {
+    padding: 32px 24px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .gallery-admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-nav-btn {
+    padding: 8px 11px;
+    font-size: 0.78rem;
+  }
 }
