@@ -9,12 +9,6 @@ import './BlogPage.css';
 
 const CATEGORIES = ['all', 'events', 'news', 'stories'];
 
-const defaultBlogs = [
-  { id: 'd1', title: 'गावातील गणेशोत्सव', category: 'events', excerpt: 'यंदाच्या गणेशोत्सवात गावात भव्य मिरवणूक काढण्यात आली.', date: '१५ सप्टेंबर २०२३', image: null, content: '<p>यंदाच्या गणेशोत्सवात गावात भव्य मिरवणूक काढण्यात आली. हजारो ग्रामस्थांनी उत्साहाने सहभाग घेतला. दहा दिवसांचा उत्सव अत्यंत थाटात पार पडला.</p>' },
-  { id: 'd2', title: 'जलसंधारण प्रकल्प', category: 'news', excerpt: 'ग्रामपंचायतीने राबवलेल्या जलसंधारण प्रकल्पामुळे गावात पाण्याची समस्या दूर झाली.', date: '२ ऑक्टोबर २०२३', image: null, content: '<p>ग्रामपंचायतीने राबवलेल्या जलसंधारण प्रकल्पामुळे गावात पाण्याची समस्या दूर होण्यास मदत झाली. या प्रकल्पाअंतर्गत पाच नवीन विहिरी खोदण्यात आल्या.</p>' },
-  { id: 'd3', title: 'युवकांनी घडवला डिजिटल चेहरा', category: 'stories', excerpt: 'गावातील तरुण मंडळाने डिजिटल महाराष्ट्र योजनेत सक्रिय सहभाग घेतला.', date: '१८ नोव्हेंबर २०२३', image: null, content: '<p>गावातील युवकांनी आपल्या तांत्रिक कौशल्याचा वापर करून गावाला डिजिटल युगात नेण्यासाठी महत्त्वाचे योगदान दिले आहे.</p>' },
-];
-
 const catColors = {
   events: { bg: 'rgba(45,138,98,0.1)', color: 'var(--green-light)', label: 'कार्यक्रम' },
   news: { bg: 'rgba(201,168,76,0.12)', color: '#8a6820', label: 'बातम्या' },
@@ -24,13 +18,13 @@ const catColors = {
 // ─── Blog List ───
 export const BlogListPage = () => {
   const { t } = useLanguage();
-  const [blogs, setBlogs] = useState(defaultBlogs);
+  const [blogs, setBlogs] = useState([]);
   const [cat, setCat] = useState('all');
 
   useEffect(() => {
     const q = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'));
     const unsub = onSnapshot(q, snap => {
-      if (!snap.empty) setBlogs(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setBlogs(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     return unsub;
   }, []);
@@ -58,7 +52,6 @@ export const BlogListPage = () => {
 
       <section className="section-pad blog-list-section">
         <div className="container">
-          {/* Category filter */}
           <div className="gallery-filters" style={{ marginBottom: 40 }}>
             {CATEGORIES.map(c => (
               <button
@@ -75,14 +68,21 @@ export const BlogListPage = () => {
             {filtered.map((blog, i) => {
               const cfg = catColors[blog.category] || catColors.news;
               return (
-                <Link key={blog.id} to={`/blog/${blog.id}`} className="blog-list-card glass-card" style={{ animationDelay: `${i * 0.1}s` }}>
+                <Link
+                  key={blog.id}
+                  to={`/blog/${blog.id}`}
+                  className="blog-list-card glass-card"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
                   <div className="blog-list-img">
                     {blog.image ? (
                       <img src={blog.image} alt={blog.title} loading="lazy" />
                     ) : (
                       <div className="blog-img-placeholder">✍️</div>
                     )}
-                    <span className="blog-cat-pill" style={{ background: cfg.bg, color: cfg.color }}>{cfg.label}</span>
+                    <span className="blog-cat-pill" style={{ background: cfg.bg, color: cfg.color }}>
+                      {cfg.label}
+                    </span>
                   </div>
                   <div className="blog-list-body">
                     <h3 className="blog-list-title">{blog.title}</h3>
@@ -99,7 +99,9 @@ export const BlogListPage = () => {
 
           {filtered.length === 0 && (
             <div className="glass-card" style={{ textAlign: 'center', padding: 60 }}>
-              <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>📝 या श्रेणीत अद्याप कोणतेही लेख नाहीत.</p>
+              <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
+                📝 या श्रेणीत अद्याप कोणतेही लेख नाहीत.
+              </p>
             </div>
           )}
         </div>
@@ -119,9 +121,9 @@ export const BlogDetailPage = () => {
       try {
         const snap = await getDoc(doc(db, 'blogs', id));
         if (snap.exists()) setBlog({ id: snap.id, ...snap.data() });
-        else setBlog(defaultBlogs.find(b => b.id === id) || null);
+        else setBlog(null);
       } catch {
-        setBlog(defaultBlogs.find(b => b.id === id) || null);
+        setBlog(null);
       } finally {
         setLoading(false);
       }
@@ -130,10 +132,13 @@ export const BlogDetailPage = () => {
   }, [id]);
 
   if (loading) return <div className="page-loader"><div className="spinner" /></div>;
+
   if (!blog) return (
-    <div className="section-pad container" style={{ textAlign: 'center' }}>
-      <p>लेख सापडला नाही.</p>
-      <Link to="/blog" className="btn-primary" style={{ marginTop: 24, display: 'inline-flex' }}>ब्लॉग यादीकडे परत जा</Link>
+    <div className="section-pad container" style={{ textAlign: 'center', minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
+      <p style={{ fontSize: '1.1rem', color: 'var(--text-light)' }}>📝 लेख सापडला नाही.</p>
+      <Link to="/blog" className="btn-primary" style={{ display: 'inline-flex' }}>
+        ब्लॉग यादीकडे परत जा
+      </Link>
     </div>
   );
 
@@ -142,11 +147,17 @@ export const BlogDetailPage = () => {
   return (
     <>
       <Helmet><title>{blog.title} | सांगवडेवाडी गाव</title></Helmet>
+
       <section className="page-hero">
         <div className="page-hero-bg" />
         <div className="page-hero-overlay" />
         <div className="container page-hero-content">
-          <span className="blog-cat-pill" style={{ background: 'rgba(255,255,255,0.15)', color: 'var(--white-warm)', marginBottom: 16, display: 'inline-block' }}>{cfg.label}</span>
+          <span
+            className="blog-cat-pill"
+            style={{ background: 'rgba(255,255,255,0.15)', color: 'var(--white-warm)', marginBottom: 16, display: 'inline-block' }}
+          >
+            {cfg.label}
+          </span>
           <h1 className="page-hero-title">{blog.title}</h1>
           <p className="page-hero-sub">📅 {blog.date}</p>
         </div>
@@ -164,7 +175,8 @@ export const BlogDetailPage = () => {
               <img src={blog.image} alt={blog.title} />
             </div>
           )}
-          <div className="blog-detail-content glass-card"
+          <div
+            className="blog-detail-content glass-card"
             dangerouslySetInnerHTML={{ __html: blog.content || `<p>${blog.excerpt}</p>` }}
           />
           <div style={{ marginTop: 32 }}>

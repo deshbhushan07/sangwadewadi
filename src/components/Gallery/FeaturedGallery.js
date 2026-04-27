@@ -9,15 +9,6 @@ import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 import './FeaturedGallery.css';
 
-const placeholderItems = [
-  { id: '1', type: 'image', url: null, category: 'festivals', caption: 'गणेशोत्सव सोहळा' },
-  { id: '2', type: 'image', url: null, category: 'nature', caption: 'गावाचे निसर्गसौंदर्य' },
-  { id: '3', type: 'image', url: null, category: 'events', caption: 'स्वातंत्र्यदिन कार्यक्रम' },
-  { id: '4', type: 'image', url: null, category: 'people', caption: 'ग्रामस्थांची भेट' },
-  { id: '5', type: 'image', url: null, category: 'festivals', caption: 'दीपावली उत्सव' },
-  { id: '6', type: 'image', url: null, category: 'nature', caption: 'शेत परिसर' },
-];
-
 const emojiMap = {
   festivals: '🎉',
   nature: '🌿',
@@ -27,7 +18,7 @@ const emojiMap = {
 
 const FeaturedGallery = () => {
   const { t } = useLanguage();
-  const [items, setItems] = useState(placeholderItems);
+  const [items, setItems] = useState([]);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -35,9 +26,7 @@ const FeaturedGallery = () => {
   useEffect(() => {
     const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'), limit(6));
     const unsub = onSnapshot(q, snap => {
-      if (!snap.empty) {
-        setItems(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      }
+      setItems(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     return unsub;
   }, []);
@@ -61,32 +50,38 @@ const FeaturedGallery = () => {
           <p className="section-subtitle">{t('gallerySubtitle')}</p>
         </div>
 
-        <div className={`gallery-masonry ${inView ? 'visible' : ''}`}>
-          {items.slice(0, 6).map((item, i) => (
-            <div
-              key={item.id}
-              className={`gallery-item gallery-item-${(i % 3) + 1}`}
-              onClick={() => handleClick(i)}
-              style={{ animationDelay: `${i * 0.08}s` }}
-            >
-              {item.url ? (
-                <img src={item.url} alt={item.caption} loading="lazy" />
-              ) : (
-                <div className="gallery-placeholder">
-                  <span>{emojiMap[item.category] || '🖼️'}</span>
-                  <p>{item.caption}</p>
-                </div>
-              )}
-              <div className="gallery-overlay">
-                <div className="gallery-overlay-content">
-                  <span className="gallery-zoom-icon">🔍</span>
-                  <p>{item.caption}</p>
-                  <span className="gallery-cat-badge">{t(item.category) || item.category}</span>
+        {items.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-light)' }}>
+            <p style={{ fontSize: '1.1rem' }}>🖼️ अद्याप कोणतेही चित्र नाहीत.</p>
+          </div>
+        ) : (
+          <div className={`gallery-masonry ${inView ? 'visible' : ''}`}>
+            {items.slice(0, 6).map((item, i) => (
+              <div
+                key={item.id}
+                className={`gallery-item gallery-item-${(i % 3) + 1}`}
+                onClick={() => handleClick(i)}
+                style={{ animationDelay: `${i * 0.08}s` }}
+              >
+                {item.url ? (
+                  <img src={item.url} alt={item.caption} loading="lazy" />
+                ) : (
+                  <div className="gallery-placeholder">
+                    <span>{emojiMap[item.category] || '🖼️'}</span>
+                    <p>{item.caption}</p>
+                  </div>
+                )}
+                <div className="gallery-overlay">
+                  <div className="gallery-overlay-content">
+                    <span className="gallery-zoom-icon">🔍</span>
+                    <p>{item.caption}</p>
+                    <span className="gallery-cat-badge">{t(item.category) || item.category}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div style={{ textAlign: 'center', marginTop: 48 }}>
           <Link to="/gallery" className="btn-primary">

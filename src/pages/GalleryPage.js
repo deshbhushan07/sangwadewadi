@@ -10,23 +10,11 @@ import './GalleryPage.css';
 
 const FILTERS = ['all', 'festivals', 'nature', 'events', 'people'];
 
-const defaultGallery = [
-  { id: '1', category: 'festivals', caption: 'गणेशोत्सव', url: null, type: 'image' },
-  { id: '2', category: 'nature', caption: 'हिरवा निसर्ग', url: null, type: 'image' },
-  { id: '3', category: 'events', caption: 'स्वातंत्र्यदिन', url: null, type: 'image' },
-  { id: '4', category: 'people', caption: 'ग्रामसभा', url: null, type: 'image' },
-  { id: '5', category: 'festivals', caption: 'दीपावली', url: null, type: 'image' },
-  { id: '6', category: 'nature', caption: 'शेत', url: null, type: 'image' },
-  { id: '7', category: 'events', caption: 'events', caption: 'पुरस्कार सोहळा', url: null, type: 'image' },
-  { id: '8', category: 'people', caption: 'महिला बचत गट', url: null, type: 'image' },
-  { id: '9', category: 'nature', caption: 'गावाचे सौंदर्य', url: null, type: 'image' },
-];
-
 const emojiMap = { festivals: '🎉', nature: '🌿', events: '📅', people: '👥' };
 
 const GalleryPage = () => {
   const { t } = useLanguage();
-  const [items, setItems] = useState(defaultGallery);
+  const [items, setItems] = useState([]);
   const [filter, setFilter] = useState('all');
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -34,7 +22,7 @@ const GalleryPage = () => {
   useEffect(() => {
     const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
     const unsub = onSnapshot(q, snap => {
-      if (!snap.empty) setItems(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setItems(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     return unsub;
   }, []);
@@ -56,7 +44,6 @@ const GalleryPage = () => {
         <title>छायाचित्र दालन | सांगवडेवाडी गाव</title>
       </Helmet>
 
-      {/* Hero */}
       <section className="page-hero gallery-hero">
         <div className="page-hero-bg" />
         <div className="page-hero-overlay" />
@@ -72,7 +59,6 @@ const GalleryPage = () => {
         </div>
       </section>
 
-      {/* Filter */}
       <section className="section-pad gallery-page-section">
         <div className="container">
           <div className="gallery-filters">
@@ -87,38 +73,38 @@ const GalleryPage = () => {
             ))}
           </div>
 
-          <div className="gallery-page-grid">
-            {filtered.map((item, i) => (
-              <div
-                key={item.id}
-                className="gallery-page-item"
-                onClick={() => handleClick(i)}
-                style={{ animationDelay: `${(i % 9) * 0.06}s` }}
-              >
-                {item.url ? (
-                  <img src={item.url} alt={item.caption} loading="lazy" />
-                ) : (
-                  <div className="gallery-page-placeholder">
-                    <span>{emojiMap[item.category] || '🖼️'}</span>
-                    <p>{item.caption}</p>
-                  </div>
-                )}
-                {item.type === 'video' && (
-                  <div className="video-badge">▶ Video</div>
-                )}
-                <div className="gallery-page-overlay">
-                  <span className="gallery-page-zoom">🔍</span>
-                  <p>{item.caption}</p>
-                  <span className="gal-cat-pill">{t(item.category) || item.category}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filtered.length === 0 && (
+          {filtered.length === 0 ? (
             <div className="gallery-empty glass-card">
               <span>🖼️</span>
               <p>या श्रेणीत अद्याप कोणतेही चित्र नाहीत.</p>
+            </div>
+          ) : (
+            <div className="gallery-page-grid">
+              {filtered.map((item, i) => (
+                <div
+                  key={item.id}
+                  className="gallery-page-item"
+                  onClick={() => handleClick(i)}
+                  style={{ animationDelay: `${(i % 9) * 0.06}s` }}
+                >
+                  {item.url ? (
+                    <img src={item.url} alt={item.caption} loading="lazy" />
+                  ) : (
+                    <div className="gallery-page-placeholder">
+                      <span>{emojiMap[item.category] || '🖼️'}</span>
+                      <p>{item.caption}</p>
+                    </div>
+                  )}
+                  {item.type === 'video' && (
+                    <div className="video-badge">▶ Video</div>
+                  )}
+                  <div className="gallery-page-overlay">
+                    <span className="gallery-page-zoom">🔍</span>
+                    <p>{item.caption}</p>
+                    <span className="gal-cat-pill">{t(item.category) || item.category}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

@@ -1,38 +1,11 @@
 // src/components/Blog/FeaturedBlogs.js
-import { db } from '../../firebase';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { db } from '../../firebase';
 import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { useInView } from 'react-intersection-observer';
 import { useLanguage } from '../../context/LanguageContext';
 import './FeaturedBlogs.css';
-
-const defaultBlogs = [
-  {
-    id: '1',
-    title: 'गावातील गणेशोत्सव उत्साहात साजरा',
-    category: 'events',
-    excerpt: 'यंदाच्या गणेशोत्सवात गावात भव्य मिरवणूक काढण्यात आली. हजारो ग्रामस्थांनी उत्साहाने सहभाग घेतला.',
-    image: null,
-    date: '१५ सप्टेंबर २०२३',
-  },
-  {
-    id: '2',
-    title: 'जलसंधारण प्रकल्पास मिळाले यश',
-    category: 'news',
-    excerpt: 'ग्रामपंचायतीने राबवलेल्या जलसंधारण प्रकल्पामुळे गावात पाण्याची समस्या दूर होण्यास मदत झाली.',
-    image: null,
-    date: '२ ऑक्टोबर २०२३',
-  },
-  {
-    id: '3',
-    title: 'युवकांनी घडवला गावाचा डिजिटल चेहरा',
-    category: 'stories',
-    excerpt: 'गावातील तरुण मंडळाने डिजिटल महाराष्ट्र योजनेत सक्रिय सहभाग घेऊन गावाला डिजिटल युगात नेले.',
-    image: null,
-    date: '१८ नोव्हेंबर २०२३',
-  },
-];
 
 const categoryColors = {
   events: { bg: 'rgba(45,138,98,0.1)', color: 'var(--green-light)', label: 'कार्यक्रम' },
@@ -70,15 +43,13 @@ const BlogCard = ({ blog, index }) => {
 
 const FeaturedBlogs = () => {
   const { t } = useLanguage();
-  const [blogs, setBlogs] = useState(defaultBlogs);
+  const [blogs, setBlogs] = useState([]);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
   useEffect(() => {
     const q = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(3));
     const unsub = onSnapshot(q, snap => {
-      if (!snap.empty) {
-        setBlogs(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      }
+      setBlogs(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     return unsub;
   }, []);
@@ -92,11 +63,17 @@ const FeaturedBlogs = () => {
           <p className="section-subtitle">{t('blogSubtitle')}</p>
         </div>
 
-        <div className={`blogs-grid ${inView ? 'visible' : ''}`}>
-          {blogs.map((blog, i) => (
-            <BlogCard key={blog.id} blog={blog} index={i} />
-          ))}
-        </div>
+        {blogs.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-light)' }}>
+            <p style={{ fontSize: '1.1rem' }}>📝 अद्याप कोणतेही ब्लॉग नाहीत.</p>
+          </div>
+        ) : (
+          <div className={`blogs-grid ${inView ? 'visible' : ''}`}>
+            {blogs.map((blog, i) => (
+              <BlogCard key={blog.id} blog={blog} index={i} />
+            ))}
+          </div>
+        )}
 
         <div style={{ textAlign: 'center', marginTop: 48 }}>
           <Link to="/blog" className="btn-secondary">{t('viewAll')} ब्लॉग →</Link>

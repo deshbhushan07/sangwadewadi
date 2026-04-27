@@ -5,28 +5,19 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { useLanguage } from '../../context/LanguageContext';
 import './AwardsSlider.css';
 
-const defaultAwards = [
-  { title: 'उत्कृष्ट ग्रामपंचायत पुरस्कार', year: '२०२३', icon: '🏆', by: 'जिल्हा परिषद, कोल्हापूर' },
-  { title: 'स्वच्छ गाव पुरस्कार', year: '२०२२', icon: '🌟', by: 'महाराष्ट्र सरकार' },
-  { title: 'डिजिटल ग्राम पुरस्कार', year: '२०२१', icon: '💻', by: 'राज्य शासन' },
-  { title: 'जलसंधारण उत्कृष्टता', year: '२०२०', icon: '💧', by: 'जिल्हाधिकारी कार्यालय' },
-  { title: 'महिला सक्षमीकरण पुरस्कार', year: '२०१९', icon: '👩', by: 'जिल्हा परिषद' },
-  { title: 'वृक्षारोपण श्रेष्ठ गाव', year: '२०१८', icon: '🌳', by: 'वन विभाग' },
-];
-
 const AwardsSlider = () => {
   const { t } = useLanguage();
-  const [awards, setAwards] = useState(defaultAwards);
+  const [awards, setAwards] = useState([]);
 
   useEffect(() => {
     const q = query(collection(db, 'awards'), orderBy('createdAt', 'desc'));
     const unsub = onSnapshot(q, snap => {
-      if (!snap.empty) {
-        setAwards(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      }
+      setAwards(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     return unsub;
   }, []);
+
+  if (awards.length === 0) return null;
 
   const doubled = [...awards, ...awards];
 
@@ -56,7 +47,6 @@ const AwardsSlider = () => {
         </div>
       </div>
 
-      {/* Fade edges */}
       <div className="awards-fade-left" />
       <div className="awards-fade-right" />
     </section>

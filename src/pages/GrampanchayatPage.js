@@ -7,22 +7,6 @@ import { useInView } from 'react-intersection-observer';
 import { useLanguage } from '../context/LanguageContext';
 import './GrampanchayatPage.css';
 
-const defaultMembers = [
-  { id: '1', name: 'श्री. रामचंद्र पाटील', role: 'sarpanch', phone: '+91 98765 43210', photo: null, ward: 'सरपंच' },
-  { id: '2', name: 'श्रीमती. सुनीता देसाई', role: 'member', phone: '+91 98765 43211', photo: null, ward: 'वार्ड १' },
-  { id: '3', name: 'श्री. विजय शिंदे', role: 'member', phone: '+91 98765 43212', photo: null, ward: 'वार्ड २' },
-  { id: '4', name: 'श्रीमती. अनिता कदम', role: 'member', phone: '+91 98765 43213', photo: null, ward: 'वार्ड ३' },
-  { id: '5', name: 'श्री. सतीश जाधव', role: 'member', phone: '+91 98765 43214', photo: null, ward: 'वार्ड ४' },
-  { id: '6', name: 'श्रीमती. मीना पाटील', role: 'member', phone: '+91 98765 43215', photo: null, ward: 'वार्ड ५' },
-  { id: '7', name: 'श्री. संतोष माने', role: 'member', phone: '+91 98765 43216', photo: null, ward: 'वार्ड ६' },
-];
-
-const defaultNotices = [
-  { id: 'n1', title: 'ग्रामसभा बैठक – एप्रिल २०२४', date: '२५ एप्रिल २०२४', content: 'दि. ३० एप्रिल रोजी ग्रामसभेची बैठक ग्रामपंचायत कार्यालयात सकाळी ११:०० वाजता आयोजित करण्यात आली आहे. सर्व ग्रामस्थांना उपस्थित राहण्याची विनंती.', type: 'notice' },
-  { id: 'n2', title: 'मालमत्ता कर भरण्याची अंतिम तारीख', date: '१५ मार्च २०२४', content: 'सन २०२३-२४ साठीचा मालमत्ता कर दि. ३१ मार्च पूर्वी भरावा. उशीर झाल्यास दंड आकारण्यात येईल.', type: 'tax' },
-  { id: 'n3', title: 'स्वच्छ महाराष्ट्र मिशन – नवीन शौचालय योजना', date: '५ फेब्रुवारी २०२४', content: 'पात्र लाभार्थ्यांना शौचालय बांधकामासाठी अनुदान मिळण्यासाठी ग्रामपंचायत कार्यालयात नाव नोंदणी करावी.', type: 'scheme' },
-];
-
 const roleConfig = {
   sarpanch: { label: 'सरपंच', color: 'var(--gold)', bg: 'rgba(201,168,76,0.12)', border: 'rgba(201,168,76,0.3)', icon: '👑' },
   member: { label: 'सदस्य', color: 'var(--green-mid)', bg: 'rgba(45,138,98,0.08)', border: 'rgba(45,138,98,0.2)', icon: '🤝' },
@@ -36,8 +20,8 @@ const noticeTypeConfig = {
 
 const GrampanchayatPage = () => {
   const { t } = useLanguage();
-  const [members, setMembers] = useState(defaultMembers);
-  const [notices, setNotices] = useState(defaultNotices);
+  const [members, setMembers] = useState([]);
+  const [notices, setNotices] = useState([]);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const { ref: notRef, inView: notIn } = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -46,10 +30,10 @@ const GrampanchayatPage = () => {
     const nq = query(collection(db, 'gpNotices'), orderBy('createdAt', 'desc'));
 
     const unsub1 = onSnapshot(mq, snap => {
-      if (!snap.empty) setMembers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setMembers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     const unsub2 = onSnapshot(nq, snap => {
-      if (!snap.empty) setNotices(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setNotices(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
     return () => { unsub1(); unsub2(); };
@@ -62,7 +46,6 @@ const GrampanchayatPage = () => {
     <>
       <Helmet><title>ग्रामपंचायत | सांगवडेवाडी गाव</title></Helmet>
 
-      {/* Page Hero */}
       <section className="page-hero">
         <div className="page-hero-bg" />
         <div className="page-hero-overlay" />
@@ -78,8 +61,8 @@ const GrampanchayatPage = () => {
         </div>
       </section>
 
-      {/* Sarpanch spotlight */}
-      {sarpanch && (
+      {/* Sarpanch */}
+      {sarpanch ? (
         <section className="section-pad gp-sarpanch-section">
           <div className="container">
             <div className="sarpanch-card glass-card">
@@ -107,6 +90,14 @@ const GrampanchayatPage = () => {
             </div>
           </div>
         </section>
+      ) : (
+        <section className="section-pad gp-sarpanch-section">
+          <div className="container">
+            <div className="glass-card" style={{ textAlign: 'center', padding: 40 }}>
+              <p style={{ color: 'var(--text-light)' }}>👑 सरपंच माहिती लवकरच उपलब्ध होईल.</p>
+            </div>
+          </div>
+        </section>
       )}
 
       {/* Members */}
@@ -116,33 +107,40 @@ const GrampanchayatPage = () => {
             <h2 className="section-title">ग्रामपंचायत सदस्य</h2>
             <p className="section-subtitle">आपले लोकप्रतिनिधी</p>
           </div>
-          <div className={`gp-members-grid ${inView ? 'visible' : ''}`}>
-            {membersList.map((m, i) => {
-              const cfg = roleConfig[m.role] || roleConfig.member;
-              return (
-                <div key={m.id} className="member-card glass-card" style={{ animationDelay: `${i * 0.08}s` }}>
-                  <div className="member-avatar" style={{ borderColor: cfg.border }}>
-                    {m.photo ? (
-                      <img src={m.photo} alt={m.name} />
-                    ) : (
-                      <div className="member-avatar-placeholder" style={{ background: cfg.bg }}>
-                        <span>👤</span>
-                      </div>
-                    )}
+
+          {membersList.length === 0 ? (
+            <div className="glass-card" style={{ textAlign: 'center', padding: 40 }}>
+              <p style={{ color: 'var(--text-light)' }}>🤝 सदस्य माहिती लवकरच उपलब्ध होईल.</p>
+            </div>
+          ) : (
+            <div className={`gp-members-grid ${inView ? 'visible' : ''}`}>
+              {membersList.map((m, i) => {
+                const cfg = roleConfig[m.role] || roleConfig.member;
+                return (
+                  <div key={m.id} className="member-card glass-card" style={{ animationDelay: `${i * 0.08}s` }}>
+                    <div className="member-avatar" style={{ borderColor: cfg.border }}>
+                      {m.photo ? (
+                        <img src={m.photo} alt={m.name} />
+                      ) : (
+                        <div className="member-avatar-placeholder" style={{ background: cfg.bg }}>
+                          <span>👤</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="member-info">
+                      <span className="member-role-badge" style={{ background: cfg.bg, color: cfg.color }}>
+                        {cfg.icon} {m.ward || cfg.label}
+                      </span>
+                      <h4 className="member-name">{m.name}</h4>
+                      {m.phone && (
+                        <a href={`tel:${m.phone}`} className="member-phone">📞 {m.phone}</a>
+                      )}
+                    </div>
                   </div>
-                  <div className="member-info">
-                    <span className="member-role-badge" style={{ background: cfg.bg, color: cfg.color }}>
-                      {cfg.icon} {m.ward || cfg.label}
-                    </span>
-                    <h4 className="member-name">{m.name}</h4>
-                    {m.phone && (
-                      <a href={`tel:${m.phone}`} className="member-phone">📞 {m.phone}</a>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -153,25 +151,32 @@ const GrampanchayatPage = () => {
             <h2 className="section-title">{t('notices')}</h2>
             <p className="section-subtitle">ग्रामपंचायतीच्या महत्त्वाच्या सूचना</p>
           </div>
-          <div className={`notices-list ${notIn ? 'visible' : ''}`}>
-            {notices.map((n, i) => {
-              const cfg = noticeTypeConfig[n.type] || noticeTypeConfig.notice;
-              return (
-                <div key={n.id} className="notice-item glass-card" style={{ animationDelay: `${i * 0.1}s` }}>
-                  <div className="notice-icon-wrap" style={{ background: cfg.bg }}>
-                    <span>{cfg.icon}</span>
-                  </div>
-                  <div className="notice-content">
-                    <div className="notice-header">
-                      <h4 className="notice-title" style={{ color: cfg.color }}>{n.title}</h4>
-                      <span className="notice-date">📅 {n.date}</span>
+
+          {notices.length === 0 ? (
+            <div className="glass-card" style={{ textAlign: 'center', padding: 40, maxWidth: 860, margin: '0 auto' }}>
+              <p style={{ color: 'var(--text-light)' }}>📢 अद्याप कोणत्याही सूचना नाहीत.</p>
+            </div>
+          ) : (
+            <div className={`notices-list ${notIn ? 'visible' : ''}`}>
+              {notices.map((n, i) => {
+                const cfg = noticeTypeConfig[n.type] || noticeTypeConfig.notice;
+                return (
+                  <div key={n.id} className="notice-item glass-card" style={{ animationDelay: `${i * 0.1}s` }}>
+                    <div className="notice-icon-wrap" style={{ background: cfg.bg }}>
+                      <span>{cfg.icon}</span>
                     </div>
-                    <p className="notice-body">{n.content}</p>
+                    <div className="notice-content">
+                      <div className="notice-header">
+                        <h4 className="notice-title" style={{ color: cfg.color }}>{n.title}</h4>
+                        <span className="notice-date">📅 {n.date}</span>
+                      </div>
+                      <p className="notice-body">{n.content}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -183,7 +188,7 @@ const GrampanchayatPage = () => {
               <h3>🏛️ ग्रामपंचायत कार्यालय</h3>
               <div className="gp-info-details">
                 <p>📍 सांगवडेवाडी, करवीर, कोल्हापूर – ४१६२०२</p>
-                <p>📞 +91 XXXXX XXXXX</p>
+                <p>📞 +91 77209 57999</p>
                 <p>🕐 सोमवार ते शनिवार: सकाळी १०:०० – संध्याकाळी ५:३०</p>
                 <p>📧 gp.sangwadewadi@maharashtra.gov.in</p>
               </div>
@@ -191,7 +196,16 @@ const GrampanchayatPage = () => {
             <div className="gp-info-card glass-card">
               <h3>📋 उपलब्ध सेवा</h3>
               <ul className="gp-services-list">
-                {['जन्म / मृत्यू प्रमाणपत्र', 'रहिवासी प्रमाणपत्र', 'उत्पन्न दाखला', 'मालमत्ता कर भरणे', 'बांधकाम परवानगी', 'पाणी जोडणी', 'स्वच्छता सुविधा', 'नरेगा कामे'].map((s, i) => (
+                {[
+                  'जन्म / मृत्यू प्रमाणपत्र',
+                  'रहिवासी प्रमाणपत्र',
+                  'उत्पन्न दाखला',
+                  'मालमत्ता कर भरणे',
+                  'बांधकाम परवानगी',
+                  'पाणी जोडणी',
+                  'स्वच्छता सुविधा',
+                  'नरेगा कामे'
+                ].map((s, i) => (
                   <li key={i}>✅ {s}</li>
                 ))}
               </ul>

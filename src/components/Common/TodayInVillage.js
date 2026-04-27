@@ -6,12 +6,6 @@ import { useInView } from 'react-intersection-observer';
 import { useLanguage } from '../../context/LanguageContext';
 import './TodayInVillage.css';
 
-const defaultUpdates = [
-  { type: 'event', title: 'ग्रामसभा बैठक', desc: 'दि. ३० एप्रिल रोजी ग्रामसभेची बैठक आयोजित करण्यात आली आहे.', time: 'आज सकाळी ११:०० वाजता' },
-  { type: 'notice', title: 'पाणीपुरवठा सूचना', desc: 'उद्या सकाळी ९ ते ११ दरम्यान पाणीपुरवठा बंद राहणार आहे.', time: 'काल प्रकाशित' },
-  { type: 'achievement', title: 'स्वच्छता मोहीम यशस्वी', desc: 'गावातील स्वच्छता मोहीम यशस्वीरित्या पार पडली. सर्व ग्रामस्थांचे आभार.', time: '२ दिवसांपूर्वी' },
-];
-
 const typeConfig = {
   event: { icon: '📅', color: '#2d8a62', bg: 'rgba(45,138,98,0.08)', label: 'कार्यक्रम' },
   notice: { icon: '📢', color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', label: 'सूचना' },
@@ -20,15 +14,13 @@ const typeConfig = {
 
 const TodayInVillage = () => {
   const { t } = useLanguage();
-  const [updates, setUpdates] = useState(defaultUpdates);
+  const [updates, setUpdates] = useState([]);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
   useEffect(() => {
     const q = query(collection(db, 'todayUpdates'), orderBy('createdAt', 'desc'), limit(6));
     const unsub = onSnapshot(q, snap => {
-      if (!snap.empty) {
-        setUpdates(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      }
+      setUpdates(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     return unsub;
   }, []);
@@ -60,7 +52,9 @@ const TodayInVillage = () => {
                   <div className="today-card-header" style={{ background: cfg.bg }}>
                     <span className="today-icon">{cfg.icon}</span>
                     <span className="today-type-label" style={{ color: cfg.color }}>{cfg.label}</span>
-                    <span className="today-time">{u.time || u.createdAt?.toDate?.()?.toLocaleDateString?.('mr-IN') || ''}</span>
+                    <span className="today-time">
+                      {u.time || u.createdAt?.toDate?.()?.toLocaleDateString?.('mr-IN') || ''}
+                    </span>
                   </div>
                   <div className="today-card-body">
                     <h4 className="today-title">{u.title}</h4>

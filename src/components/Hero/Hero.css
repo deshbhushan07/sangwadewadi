@@ -137,6 +137,9 @@
   overflow: hidden;
   backdrop-filter: blur(10px);
   animation: fadeUp 0.8s ease 0.85s both;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 40px;
 }
 
 .hero-stat {
@@ -235,12 +238,13 @@
   left: 0;
   right: 0;
   pointer-events: none;
-  z-index: 5;
+  z-index: 2;
 }
 
 .hero-wave svg {
   width: 100%;
   height: 80px;
+  margin-bottom: -2px;
 }
 
 /* Mobile */
