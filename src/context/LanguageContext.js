@@ -20,7 +20,7 @@ const translations = {
 
     // About
     aboutTitle: 'आमच्या गावाबद्दल',
-    aboutText: 'सांगवडेवाडी हे कोल्हापूर जिल्ह्यातील करवीर तालुक्यात वसलेले एक सुंदर गाव आहे. लोकसंख्या सुमारे ४००० असलेले हे गाव आपल्या समृद्ध संस्कृती, हिरव्यागार निसर्गसौंदर्य आणि एकोप्याने जगणाऱ्या समाजासाठी ओळखले जाते.',
+    aboutText: 'सांगवडेवाडी हे कोल्हापूर जिल्ह्यातील करवीर तालुक्यात वसलेले एक सुंदर गाव आहे. २०११ च्या जनगणनेनुसार गावाची लोकसंख्या २,५३३ असून ५२९ कुटुंबे येथे राहतात. गावाचे एकूण क्षेत्रफळ २६२ हेक्टर आहे. कोल्हापूर शहरापासून सुमारे १६ किमी अंतरावर वसलेले हे गाव करवीर तालुक्यातील एक महत्त्वाचे गाव आहे.',
     readMore: 'अधिक वाचा',
     population: 'लोकसंख्या',
     pinCode: 'पिन कोड',
@@ -113,7 +113,7 @@ const translations = {
     heroBtn1: 'गाँव के बारे में जानें',
     heroBtn2: 'गैलरी देखें',
     aboutTitle: 'हमारे गाँव के बारे में',
-    aboutText: 'सांगवडेवाडी कोल्हापुर जिले के करवीर तालुका में स्थित एक सुंदर गाँव है। लगभग ४000 की आबादी वाला यह गाँव अपनी समृद्ध संस्कृति, हरे-भरे प्राकृतिक सौंदर्य और एकजुट समाज के लिए जाना जाता है।',
+    aboutText: 'सांगवडेवाडी कोल्हापुर जिले के करवीर तालुका में स्थित एक सुंदर गाँव है। 2011 की जनगणना के अनुसार गाँव की जनसंख्या 2,533 है और यहाँ 529 परिवार निवास करते हैं। गाँव का कुल क्षेत्रफल 262 हेक्टेयर है। कोल्हापुर शहर से लगभग 16 किमी की दूरी पर स्थित यह गाँव करवीर तालुका का एक महत्वपूर्ण गाँव है।',
     readMore: 'और पढ़ें',
     population: 'जनसंख्या',
     pinCode: 'पिन कोड',
@@ -190,7 +190,7 @@ const translations = {
     heroBtn1: 'Explore Village',
     heroBtn2: 'View Gallery',
     aboutTitle: 'About Our Village',
-    aboutText: 'Sangwadewadi is a beautiful village located in Karvir Taluka of Kolhapur District. With a population of approximately 4000, this village is known for its rich culture, lush natural beauty, and a united community.',
+    aboutText: 'Sangwadewadi is a beautiful village located in Karvir Taluka of Kolhapur District. As per the 2011 Census, the village has a population of 2,533 with 529 households. The total geographical area is 262 hectares. Located approximately 16 km from Kolhapur city, it falls under the Kolhapur South Vidhan Sabha and Kolhapur Lok Sabha constituencies.',
     readMore: 'Read More',
     population: 'Population',
     pinCode: 'Pin Code',

@@ -23,10 +23,10 @@ const slides = [
 ];
 
 const stats = [
-  { value: '~४०००', labelKey: 'population' },
-  { value: '४१६२०२', labelKey: 'pinCode' },
-  { value: 'करवीर', labelKey: 'taluka' },
-  { value: 'कोल्हापूर', labelKey: 'district' },
+  { value: '२,५३३', labelMr: 'लोकसंख्या (२०११)' },
+  { value: '५२९', labelMr: 'एकूण घरे' },
+  { value: '२६२ हे.', labelMr: 'क्षेत्रफळ' },
+  { value: '१५ किमी', labelMr: 'कोल्हापूरपासून' },
 ];
 
 const Hero = () => {
@@ -124,11 +124,11 @@ const Hero = () => {
         {/* Stats bar */}
         <div className="hero-stats">
           {stats.map((s, i) => (
-            <div key={i} className="hero-stat">
-              <span className="hero-stat-val">{s.value}</span>
-              <span className="hero-stat-label">{t(s.labelKey)}</span>
-            </div>
-          ))}
+ 				 	<div key={i} className="hero-stat">
+    				<span className="hero-stat-val">{s.value}</span>
+    				<span className="hero-stat-label">{s.labelMr}</span>
+  				</div>
+					))}
         </div>
       </div>
 
